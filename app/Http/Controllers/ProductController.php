@@ -15,7 +15,7 @@ class ProductController extends Controller
     public function index()
     {
         
-        $products = Product::orderBy('id', 'desc')->paginate(10);
+        $products = Product::orderBy('id', 'desc')->get();
         return response()->json([
             'products' => $products
         ], 200);
@@ -125,7 +125,8 @@ class ProductController extends Controller
     {
         $product->delete();
         return [
-            'message' => 'Product deleted successfully'
+            'message' => 'Product deleted successfully',
+            'products' => Product::orderBy('id', 'desc')->get()
         ];
     }
 }
