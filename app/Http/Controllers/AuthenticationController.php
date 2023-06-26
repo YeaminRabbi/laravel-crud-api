@@ -10,8 +10,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class LoginController extends Controller
+class AuthenticationController extends Controller
 {
+
+   
     function account_create(Request $request){
         
         $request->validate([
@@ -56,9 +58,7 @@ class LoginController extends Controller
             return response()->json($validator->errors());
         }
         
-        $remember_me = $req->has('remember_me') ? true : false;
-
-        
+        $remember_me = $req->has('remember_me') ? true : false;        
 
         if (Auth::attempt(array('email' => $req->email, 'password' => $req->password), $remember_me)) {
 
@@ -71,11 +71,10 @@ class LoginController extends Controller
             }else{
 
                 $user = Auth::user();
-                $token = $user->createToken('auth_token')->accessToken;
-                
+                $token = $user->createToken('token-name')->plainTextToken;
                 return response()->json([
                     'message' => 'Login successfully',
-                    'token' => $token->token,
+                    'token' => $token,
                     'role' => $user->getRoleNames(),
                     'user' => Auth::user()
                 ]);
@@ -94,7 +93,16 @@ class LoginController extends Controller
 
     function LOGOUT()
     {
+        if (Auth::check()) {
+            // Revoke the user's token (for Laravel Passport)
+            $user = Auth::user();
+            $user->token()->revoke();
+        }
+    
         Auth::logout();
-        return redirect()->route('adminlogin');
+    
+        return response()->json([
+            'message' => 'Logout successfully',
+        ]);
     }
 }
