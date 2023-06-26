@@ -26,3 +26,9 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::resource('products', ProductController::class);  
+
+Route::post('login', [LoginController::class, 'LOGIN'])->name('login');
+Route::post('create/user', [LoginController::class, 'account_create'])->name('account_create');
+
+
+
