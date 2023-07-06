@@ -72,12 +72,19 @@ class AuthenticationController extends Controller
 
                 $user = Auth::user();
                 $token = $user->createToken('token-name')->plainTextToken;
+                // return response()->json([
+                //     'message' => 'Login successfully',
+                //     'token' => $token,
+                //     'role' => $user->getRoleNames(),
+                //     'user' => Auth::user()
+                // ]);
                 return response()->json([
                     'message' => 'Login successfully',
                     'token' => $token,
-                    'role' => $user->getRoleNames(),
-                    'user' => Auth::user()
+                    'access'=> 1
                 ]);
+
+                
             }
 
         } else {
